@@ -1,16 +1,24 @@
+/*---------------------------------------------------*/ 
+//可変部分
+
+var shtName = 'アポ獲得';
+
+
+/*---------------------------------------------------*/ 
+
 function calendar() {
   
-  //スプレッドシートの設定
-  var sht = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('calender');
+  var sht = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(shtName);
   var lastRow = sht.getLastRow();
-  Logger.log(lastRow);
-  //*スプレッドシート設定ここまで
-  for (var i=3; i<=lastRow; i++){
+
+
+
+  for (var i=3; i<=lastRow; i++){ 
     var judge = sht.getRange(i,1).getValue();
     
     
-    //A列が空白だったらカレンダー共有    
-    if(judge == ''){
+    //A列がtrueだったらカレンダー反映  
+    if(judge == true){
       
       /*---------------------------------------------------*/      
       //SSの変数設定　ほぼ必須の内容
@@ -21,28 +29,23 @@ function calendar() {
       var start = new Date(date.getYear(),date.getMonth(),date.getDate(),time.getHours(),time.getMinutes(),time.getSeconds());
       var end = new Date(date.getYear(),date.getMonth(),date.getDate(),time.getHours()+1,time.getMinutes(),time.getSeconds());
       
-      var remindDate = sht.getRange('K'+i).getValue(); //リマインド日
-      var remindTime = sht.getRange('L'+i).getValue(); //リマインド時間
+//リマインド設定したい場合
+//      var remindDate = sht.getRange('K'+i).getValue(); //リマインド日
+//      var remindTime = sht.getRange('L'+i).getValue(); //リマインド時間
       
       var location = sht.getRange('N'+i).getValue(); //住所
 
       /*---------------------------------------------------*/      
       //SS変数設定　PJによって変わる内容
       
-      var d5 = sht.getRange('M'+i).getValue(); //店舗名
-      var d6 = sht.getRange('G'+i).getValue(); //アポの質
-      var d7 = sht.getRange('H'+i).getValue(); //駅
-      
-      var d8 = sht.getRange('I'+i).getValue(); //駅から徒歩何分か
-      var d9 = sht.getRange('J'+i).getValue(); //先方担当者
-      var d11 = sht.getRange('F'+i).getValue(); //アポ時メモ
-      var d12 = sht.getRange('O'+i).getValue(); //電話番号
-      
-      var d13 = sht.getRange('C'+i).getValue(); //キーマンor決裁者
-      var d13 = d13.split('(');
-      var d13 = d13[1].split(')');
-      
-      
+      var d1 = sht.getRange('M'+i).getValue(); //店舗名
+      var d2 = sht.getRange('G'+i).getValue(); //アポの質
+      var d3 = sht.getRange('H'+i).getValue(); //駅
+      var d4 = sht.getRange('I'+i).getValue(); //駅から徒歩何分か
+      var d5 = sht.getRange('J'+i).getValue(); //先方担当者
+      var d6 = sht.getRange('F'+i).getValue(); //アポ時メモ
+      var d7 = sht.getRange('O'+i).getValue(); //電話番号
+            
       /*---------------------------------------------------*/            
       //本文作成
       
@@ -57,17 +60,25 @@ function calendar() {
       content += '電話番号：'+d12+'\n';
       content += 'アポ時メモ：'+d11; 
       
+      /*---------------------------------------------------*/            
+      //カレンダー反映設定
+
+//自分にしか送らない場合
+//      var id = Session.getActiveUser().getEmail();
+     
+      var id = sht.getRange('C1').getValue();
+      var user = sht.getRange('E1').getValue();
       
-      var id = Session.getActiveUser().getEmail();
       
       var cal = CalendarApp.getCalendarById(id);
-      cal.createEvent(title,start,end,{description:content, location:location});
-      
-      if(d3 !== '' && d4 !== ''){
-        var remindStart = new Date(remindDate.getYear(),remindDate.getMonth(),remindDate.getDate(),remindTime.getHours(),remindTime.getMinutes(),remindTime.getSeconds());
-        var remindEnd =  new Date(remindDate.getYear(),remindDate.getMonth(),remindDate.getDate(),remindTime.getHours()+1,remindTime.getMinutes(),remindTime.getSeconds());
-        cal.createEvent(title2,remindStart,remindEnd,{description:content, location:location});
-      }
+      cal.createEvent(title,start,end,{description:content, location:location ,gusts:user});
+
+//リマインド設定したい場合      
+//      if(d3 !== '' && d4 !== ''){
+//        var remindStart = new Date(remindDate.getYear(),remindDate.getMonth(),remindDate.getDate(),remindTime.getHours(),remindTime.getMinutes(),remindTime.getSeconds());
+//        var remindEnd =  new Date(remindDate.getYear(),remindDate.getMonth(),remindDate.getDate(),remindTime.getHours()+1,remindTime.getMinutes(),remindTime.getSeconds());
+//        cal.createEvent(title2,remindStart,remindEnd,{description:content, location:location ,gusts:user});
+//      }
       
       
       sht.getRange('A'+i).setValue('済');

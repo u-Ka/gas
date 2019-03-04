@@ -1,19 +1,28 @@
 /*---------------------------------------------------*/ 
 //可変部分
 
-var shtName = 'アポ獲得';
+var shtName = 'アポ獲得一覧';
 
+var calReflectJudgeRow = 6; //カレンダー反映させる列の判断フラグ行
+
+var addressCol = 'J'; //住所の列
+var corpCol = 'K'; //社名の列
+
+
+//変更なし準備用
+var content = '【詳細】\n';
 
 /*---------------------------------------------------*/ 
+
 
 function calendar() {
   
   var sht = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(shtName);
   var lastRow = sht.getLastRow();
-
-
-
-  for (var i=3; i<=lastRow; i++){ 
+  
+  
+  
+  for (var i=3; i<=lastRow; i++){
     var judge = sht.getRange(i,1).getValue();
     
     
@@ -23,62 +32,58 @@ function calendar() {
       /*---------------------------------------------------*/      
       //SSの変数設定　ほぼ必須の内容
       
-      var date = sht.getRange('D'+i).getValue(); //商談日
-      var time = sht.getRange('E'+i).getValue(); //商談時間
+      var date = sht.getRange('E'+i).getValue(); //商談日
+      var time = sht.getRange('F'+i).getValue(); //商談時間
       
       var start = new Date(date.getYear(),date.getMonth(),date.getDate(),time.getHours(),time.getMinutes(),time.getSeconds());
       var end = new Date(date.getYear(),date.getMonth(),date.getDate(),time.getHours()+1,time.getMinutes(),time.getSeconds());
       
-//リマインド設定したい場合
-//      var remindDate = sht.getRange('K'+i).getValue(); //リマインド日
-//      var remindTime = sht.getRange('L'+i).getValue(); //リマインド時間
+      //リマインド設定したい場合
+      //      var remindDate = sht.getRange('K'+i).getValue(); //リマインド日
+      //      var remindTime = sht.getRange('L'+i).getValue(); //リマインド時間
       
-      var location = sht.getRange('N'+i).getValue(); //住所
-
+      
       /*---------------------------------------------------*/      
-      //SS変数設定　PJによって変わる内容
-      
-      var d1 = sht.getRange('M'+i).getValue(); //店舗名
-      var d2 = sht.getRange('G'+i).getValue(); //アポの質
-      var d3 = sht.getRange('H'+i).getValue(); //駅
-      var d4 = sht.getRange('I'+i).getValue(); //駅から徒歩何分か
-      var d5 = sht.getRange('J'+i).getValue(); //先方担当者
-      var d6 = sht.getRange('F'+i).getValue(); //アポ時メモ
-      var d7 = sht.getRange('O'+i).getValue(); //電話番号
-            
-      /*---------------------------------------------------*/            
       //本文作成
       
-      var title = '【' + d13[0] + '商談】'+ d5 + '@' + d7;
-      var title2 = '【リマインド】'+ d5 + '@' + d8;
+      var values = sht.getRange('A' + calReflectJudgeRow + ':' + calReflectJudgeRow).getValues();
       
-      var content = '';
-      content += '【詳細】'+'\n';
-      content += '駅徒歩：'+ d8 +'\n';
-      content += '先方担当者：'+ d9 +'\n';
-      content += 'アポの質：'+ d6 +'\n';
-      content += '電話番号：'+d12+'\n';
-      content += 'アポ時メモ：'+d11; 
+      for(var j=2; j<=values[0].length; j++){        
+        var judge2 = sht.getRange(calReflectJudgeRow,j).getValue(); //対象行でチェックがついている項目だけ反映させる
+        if(judge2 !== ''){
+          
+          var itemNme = sht.getRange(calReflectJudgeRow-2,j).getValue();
+          var item = sht.getRange(i,j).getValue();
+          
+          content += itemNme + '：' + item + '\n'; 
+        }
+      }
+      
+      var location = sht.getRange(addressCol+i).getValue(); //住所
+      var corp = sht.getRange(corpCol+i).getValue(); //社名
+      
+      var title = '【商談】'+ corp + '@' + location;
+      var title2 = '【リマインド】'+ corp + '@' + location;      
       
       /*---------------------------------------------------*/            
       //カレンダー反映設定
-
-//自分にしか送らない場合
-//      var id = Session.getActiveUser().getEmail();
-     
-      var id = sht.getRange('C1').getValue();
-      var user = sht.getRange('E1').getValue();
+      
+      //自分にしか送らない場合
+      //      var id = Session.getActiveUser().getEmail();
+      
+      var id = sht.getRange('C2').getValue();
+      var user = sht.getRange('J2').getValue();
       
       
       var cal = CalendarApp.getCalendarById(id);
       cal.createEvent(title,start,end,{description:content, location:location ,gusts:user});
-
-//リマインド設定したい場合      
-//      if(d3 !== '' && d4 !== ''){
-//        var remindStart = new Date(remindDate.getYear(),remindDate.getMonth(),remindDate.getDate(),remindTime.getHours(),remindTime.getMinutes(),remindTime.getSeconds());
-//        var remindEnd =  new Date(remindDate.getYear(),remindDate.getMonth(),remindDate.getDate(),remindTime.getHours()+1,remindTime.getMinutes(),remindTime.getSeconds());
-//        cal.createEvent(title2,remindStart,remindEnd,{description:content, location:location ,gusts:user});
-//      }
+      
+      //リマインド設定したい場合      
+      //      if(d3 !== '' && d4 !== ''){
+      //        var remindStart = new Date(remindDate.getYear(),remindDate.getMonth(),remindDate.getDate(),remindTime.getHours(),remindTime.getMinutes(),remindTime.getSeconds());
+      //        var remindEnd =  new Date(remindDate.getYear(),remindDate.getMonth(),remindDate.getDate(),remindTime.getHours()+1,remindTime.getMinutes(),remindTime.getSeconds());
+      //        cal.createEvent(title2,remindStart,remindEnd,{description:content, location:location ,gusts:user});
+      //      }
       
       
       sht.getRange('A'+i).setValue('済');
@@ -87,4 +92,15 @@ function calendar() {
     
   } //for終了
 }
+
+
+function onOpen() {
+  //独自メニューの追加
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var menus = [{name: 'カレンダー反映', functionName: 'calendar'}
+              ];
+  ss.addMenu('Function', menus);
+}
+
+
 

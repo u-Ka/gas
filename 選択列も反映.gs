@@ -2,7 +2,7 @@
 
 /*---------------------------------------------------*/
 //可変部分
-var startCell = 'AW4'; //行動ログの入力開始セル
+var startCell = 'AT4'; //行動ログの入力開始セル
 var interval　= 3; //1回に入力する行動ログの列数
 var repetition　= 15; //行動ログの履歴回数
 var sheetName = 'リスト'; //参照するシート名
@@ -31,7 +31,7 @@ function myfunction(){
     
     var n = i+interval-1;
     
-    var temp = sh.getRange(startRow,i).getA1Notation();
+    var temp = sh.getRange(startRow,n).getA1Notation();
     if(temp.length === 3){ //文字列が3なら左2文字を取得、文字列が2つなら左2文字を取得
       var temp = temp.substr(0,2);
     }else{

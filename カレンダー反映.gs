@@ -5,9 +5,14 @@ var shtName = 'アポ獲得一覧';
 
 var calReflectJudgeRow = 6; //カレンダー反映させる列の判断フラグ行
 
+//商談日と商談時間の列
+var apoDate = 'E'; //アポ日
+var apoTime = 'F'; //アポ時間
+
+
+//カレンダーのタイトル,locationに使用するために列を入力
 var addressCol = 'J'; //住所の列
 var corpCol = 'K'; //社名の列
-
 
 //変更なし準備用
 var content = '【詳細】\n';
@@ -32,8 +37,8 @@ function calendar() {
       /*---------------------------------------------------*/      
       //SSの変数設定　ほぼ必須の内容
       
-      var date = sht.getRange('E'+i).getValue(); //商談日
-      var time = sht.getRange('F'+i).getValue(); //商談時間
+      var date = sht.getRange(apoDate+i).getValue(); //商談日
+      var time = sht.getRange(apoTime+i).getValue(); //商談時間
       
       var start = new Date(date.getYear(),date.getMonth(),date.getDate(),time.getHours(),time.getMinutes(),time.getSeconds());
       var end = new Date(date.getYear(),date.getMonth(),date.getDate(),time.getHours()+1,time.getMinutes(),time.getSeconds());

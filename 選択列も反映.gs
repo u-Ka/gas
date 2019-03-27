@@ -1,30 +1,30 @@
 //選択列も反映ver.
-function myfunction(){
-  
+function queryCreate(){
+var sh = SpreadsheetApp.getActiveSheet();
+
 /*---------------------------------------------------*/
 //可変部分
-var startCell = 'AK3'; //行動ログの入力開始セル
-var interval　= 4; //1回に入力する行動ログの列数
-var repetition　= 20; //行動ログの履歴回数
-var sheetName = 'リスト'; //参照するシート名
-var otherColumn = ['c3:c']; //他に反映させたい範囲、複数ある場合はカンマ(,)区切りで文字列('')で入力
-
-var setSht = 'query'; //どのシートにquery関数を入れるか
-var setCell = 'A3';  //どのセルにquery関数を入れるか
+var sheetName = sh.getRange('C2').getValue(); //参照するシート名
+var startCell = sh.getRange('C3').getValue(); //行動ログの入力開始セル
+var interval　= sh.getRange('C4').getValue(); //1回に入力する行動ログの列数
+var repetition　= sh.getRange('G2').getValue(); //行動ログの記録回数
+var otherColumn = sh.getRange('G3').getValue(); //他に反映させたい範囲、複数ある場合はカンマ(,)区切りで文字列('')で入力
+otherColumn = otherColumn.split(',');
+  
+var setCell = sh.getRange('L2').getValue();  //どのセルにquery関数を入れるか
 
 ////関数作成用
 //var queryNoColumn = 'E'; //queryシートのNoが入っているセル
 //var listNoColumn = 'C'; //リストのnoが入っている列
 
 /*---------------------------------------------------*/
+  
+ Logger.log(startCell);
 
-var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(setSht);
-
-var startColumn = sh.getRange(startCell).getColumn();
-var startRow = sh.getRange(startCell).getRow();
-
-
-
+  var startColumn = sh.getRange(startCell).getColumn();
+  var startRow = sh.getRange(startCell).getRow();
+ 
+  Logger.log(startColumn);
   
   var func = 'query({';
   for(var i=startColumn; i<=startColumn+interval*(repetition-1); i=i+interval){

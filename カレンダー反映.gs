@@ -1,3 +1,5 @@
+function calendar() {
+  
 /*---------------------------------------------------*/ 
 //可変部分
 
@@ -19,8 +21,6 @@ var content = '【詳細】\n';
 
 /*---------------------------------------------------*/ 
 
-
-function calendar() {
   
   var sht = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(shtName);
   var lastRow = sht.getLastRow();

@@ -1,3 +1,5 @@
+function shtcreate() {
+  
 /*---------------------------------------------------*/
 //可変部分
 
@@ -19,7 +21,7 @@ var setArray2 = ['F','G','H','L','M','N','O','P','Q','R','S','T','U','V'];
 /*---------------------------------------------------*/
 //人が増えた時に新しいシートを作成
 
-function shtcreate() {
+
   
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var members = ss.getSheetByName(setSht).getRange(membersRange).getValues();

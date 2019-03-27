@@ -1,5 +1,6 @@
 //選択列も反映ver.
-
+function myfunction(){
+  
 /*---------------------------------------------------*/
 //可変部分
 var startCell = 'AK3'; //行動ログの入力開始セル
@@ -11,6 +12,10 @@ var otherColumn = ['c3:c']; //他に反映させたい範囲、複数ある場�
 var setSht = 'query'; //どのシートにquery関数を入れるか
 var setCell = 'A3';  //どのセルにquery関数を入れるか
 
+////関数作成用
+//var queryNoColumn = 'E'; //queryシートのNoが入っているセル
+//var listNoColumn = 'C'; //リストのnoが入っている列
+
 /*---------------------------------------------------*/
 
 var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(setSht);
@@ -19,7 +24,7 @@ var startColumn = sh.getRange(startCell).getColumn();
 var startRow = sh.getRange(startCell).getRow();
 
 
-function myfunction(){
+
   
   var func = 'query({';
   for(var i=startColumn; i<=startColumn+interval*(repetition-1); i=i+interval){
@@ -60,6 +65,9 @@ function myfunction(){
       
     }
   }
+
+/*---------------------------------------------------*/
+//項目名の入力用
   
   var func2 = 'query({';
   func2 += sheetName + '!'+ sh.getRange(startRow-1, startColumn).getA1Notation();
@@ -78,10 +86,45 @@ function myfunction(){
     }
   }
   
-  var setCellRow = sh.getRange(setCell).getRow()-1;
+  var setCellRow = sh.getRange(setCell).getRow();
   var setCellColumn = sh.getRange(setCell).getColumn();
   
   sh.getRange(setCell).setFormula(func);
-  sh.getRange(setCellRow, setCellColumn).setFormula(func2); 
+  sh.getRange(setCellRow-1, setCellColumn).setFormula(func2); 
   
 }
+
+
+/*---------------------------------------------------*/
+//vlookup作成用
+  
+  //=ArrayFormula(if($A$3:$A="","",VLOOKUP($E$3:$E,リスト!c3:AE,MATCH(J$2,リスト!c2:2,0))))
+  
+//  var refelenceValues = sh.getRange(setCellRow-1, 1, 1, sh.getLastColumn()).getValues();
+//  
+//  Logger.log(refelenceValues);
+//  Logger.log(refelenceValues.length);
+//  
+//  
+//  for(var i=0; i<refelenceValues.length; i++){
+//    
+//    }
+//      
+//  var vlookupFunc = 'ArrayFormula(if($A$3:$A="","",VLOOKUP('
+//  
+//  vlookupFunc += queryNoColumn+ setCellRow+ ':'+ queryNoColumn+ ','+ sheetName+ '!'+ listNoColumn+ startRow+ ':'+ startCell.substr(0,2)+ ',MATCH('+ 'J';
+//  Logger.log(vlookupFunc);
+//  vlookupFunc += setCellRow-1;
+//  Logger.log(vlookupFunc);
+//  vlookupFunc += ','+ sheetName+ '!'+ listNoColumn; 
+//  vlookupFunc += startRow-1; 
+//  vlookupFunc += ':'; 
+//  vlookupFunc += startRow-1; 
+//  vlookupFunc += ',0))))'; 
+//  Logger.log(vlookupFunc);
+//
+//  
+//  
+//  sh.getRange('J3').setFormula(vlookupFunc);
+  
+  
